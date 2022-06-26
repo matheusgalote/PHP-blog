@@ -2,17 +2,19 @@
 include('./myadmin/src/Azura.inc.php');
 include('./myadmin/src/Usuario.inc.php');
 
-
 $zura = new Azura();
 $usuario = new Usuario();
 $usuariodao = new UsuarioDAO();
 
 $usuario = $zura->populateClass('usuario', $_REQUEST);
 
-if ($_REQUEST['e'] == 'I') 
-    $usuariodao->insert($usuario);
-
-
+switch($_REQUEST['e']) {
+    case 'I':
+        $usuariodao->insert($usuario);
+    
+    case 'U':
+        $usuariodao->update($usuario);
+}
 ?>
 
 <!DOCTYPE html>

@@ -2,24 +2,20 @@
 
 class Azura {
     const USER = 'root';
-    const PASS = '';
+    const PASS = 'eins';
     const PATH = 'http://localhost/blog';
     const DATABASE = 'blog';
+    const HOST = 'localhost';
 
     private $connect;
     private $path;
-    private $host;
     private $result;
 
     public function __construct() {
-        if($_SERVER['SEERVER_NAME'] == 'localhost') {
-            $this->host = 'localhost';
-        }
-
         try {
-            $this->connect = new PDO('mysql:host='.$this->host.';dbname='.self::DATABASE, self::USER, self::PASS);
+            $this->connect = new PDO('mysql:host='.self::HOST.';dbname='.self::DATABASE, self::USER, self::PASS);
             $this->connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+            
         } catch(PDOException $e) {
             print "Error!: " . $e->getMessage();
         }
@@ -69,6 +65,7 @@ class Azura {
      */
     public function nextId($table) {
         $cd = 'cd_'.$table;
+
         $smtp = $this->connect->prepare("SELECT * FROM $table ORDER BY $cd DESC LIMIT 1");
         $smtp->execute();
 
@@ -144,6 +141,43 @@ class Aedra extends Azura {
         $sql = " INSERT INTO " . strtolower($class) ;
         $sql .= " ( " . implode(", ", $keys) . ")";
         $sql .= " VALUES (" .  implode(", ", $values) . ")";
+
+        if ($this->openDatabase($sql)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * ATUALIZA A TABELA DO OBJETO PASSADO COMO PARÂMETRO
+     *
+     * É necessário que exista um método de puxar o código como o nome da tabela
+     * 
+     * Ex: getCd_usuario -> Usuario->getCd_usuario()
+     * 
+     * @param object $obj
+     * @return boolean
+     */
+    public function update($obj) {
+        $class = strtolower(get_class($obj));
+        
+        $sql = "UPDATE $class SET ";
+
+        // SE O OBJETO FOI MODIFICADO O INCLUI NA QUERY
+        foreach($obj as $key=>$value) {
+            if($value != '')
+                $sql .= " $key='$value', ";
+        }
+
+        // REMOVE A ÚLTIMA VÍRGULA DA QUERY
+        $sql = rtrim($sql, ", ");
+
+        // CHECA SE O MÉTODO GET DA CHAVE PRIMARIA EXISTE, E PEGA SEU CÓDIGO
+        if(method_exists($obj,'getCd_'. $class)) {
+            $getCd = 'getCd_'.$class;
+            $sql .= " WHERE cd_$class = {$obj->$getCd()} ";
+        }
 
         if ($this->openDatabase($sql)) {
             return true;
