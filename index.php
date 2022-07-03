@@ -8,11 +8,19 @@ $usuariodao = new UsuarioDAO();
 
 $usuario = $zura->populateClass('usuario', $_REQUEST);
 
-switch ($_REQUEST['e']) {
+$evento = $_REQUEST['e'];
+
+switch ($evento) {
     case 'I':
         $usuariodao->insert($usuario);
         break;
+    case 'V':
+        $usuario->setCd_usuario($_REQUEST['cd']);
+        $usuario = $usuariodao->load($usuario);
+        $evento = 'U';
+        break;
     case 'U':
+        $usuario->setCd_usuario($_REQUEST['cd_usuario']);
         $usuariodao->update($usuario);
         break;
     case 'D':
@@ -20,10 +28,6 @@ switch ($_REQUEST['e']) {
         $usuariodao->delete($usuario);
         break;
 }
-
-$list = $usuariodao->select($usuario);
-
-$usuariodao->list($usuario);
 
 ?>
 <!DOCTYPE html>
@@ -39,33 +43,16 @@ $usuariodao->list($usuario);
 <body>
     <h1>The Blog</h1>
     <form action="">
-        <input type="hidden" name="e" value="I">
+        <input type="hidden" name="e" value="<?= $evento ? $evento : 'I' ?>">
+        <input type="hidden" name="cd_usuario" value="<?= $usuario->getCd_usuario() ?>">
         <label for="nome">NOME</label>
-        <input type="text" name="ds_usuario_nome">
+        <input type="text" name="ds_usuario_nome" value="<?= $usuario->getDs_usuario_nome() ?>">
         <label for="idade">EMAIL</label>
-        <input type="text" name="ds_usuario_email">
+        <input type="text" name="ds_usuario_email" value="<?= $usuario->getDs_usuario_email() ?>">
         <button type="submit">Enviar</button>
     </form>
-    <table border='1'>
-        <thead>
-            <tr>
-                <td></td>
-                <td></td>
-                <td>Nome</td>
-                <td>Email</td>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach($list as $lst) { ?>
-                <tr>
-                    <th><a href="?e=D&cd=<?= $lst['cd_usuario'] ?>">Delete</a></th>
-                    <th></th>
-                    <th><?= $lst['ds_usuario_nome'] ?></th>
-                    <th><?= $lst['ds_usuario_email'] ?></th>
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
+    <?= $usuariodao->list($usuario);
+ ?>
 </body>
 
 </html>

@@ -221,6 +221,35 @@ class Aedra extends Azura {
     }
 
     /**
+     * MÉTODO RESPONSÁVEL POR CARREGAR OS DADOS DO OBJETO PARA UPDATE
+     *
+     * @param object $obj
+     * @return object
+     */
+    public function load($obj) {
+        $class = strtolower(get_class($obj));
+
+        // A PRIMARY KEY DA TABELA
+        $cd = 'cd_'.$class;
+
+        // O GET DA PRIMARY KEY DA TABELA
+        $get = 'get'.ucwords($cd);
+
+        $sql = "SELECT * FROM $class WHERE $cd = {$obj->$get()} ";
+
+        $result = $this->openDatabaseSelect($sql);
+
+        foreach($result as $res) {
+            foreach($res as $key=>$value) {
+                $set = 'set'.ucwords($key);
+                $obj->$set($value);
+            }
+        }
+
+        return $obj;
+    }
+
+    /**
      * MÉTODO MONTADOR DE TABELAS DO OBJETO
      *
      * Monta uma tabela html com os atributos do objeto buscados no banco.
@@ -263,7 +292,7 @@ class Aedra extends Azura {
             $table .= '<tr>';
 
             $table .= '<th><a href=?e=D&cd=' . $lst[$keys[0]] . '>Delete</a></th>'; 
-            $table .= '<th><a href=?e=U&cd=' . $lst[$keys[0]] . '>Update</a></th>'; 
+            $table .= '<th><a href=?e=V&cd=' . $lst[$keys[0]] . '>Update</a></th>'; 
 
             // ITERA SOBRE AS KEYS E RETORNA OS VALORES ASSOCIADOS AS COLUNAS EM QUESTAO
             foreach($keys as $key) {
