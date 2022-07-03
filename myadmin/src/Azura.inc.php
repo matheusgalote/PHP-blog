@@ -186,6 +186,12 @@ class Aedra extends Azura {
         }
     }
 
+    /**
+     * REMOVE O ELEMENTO DA TABELA
+     *
+     * @param object $obj
+     * @return int|string
+     */
     public function delete($obj) {
         $class = strtolower(get_class($obj));
 
@@ -200,11 +206,75 @@ class Aedra extends Azura {
         return $this->openDatabase($sql);
     }
 
+    /**
+     * MÉTODO DE SELEÇÃO
+     *
+     * @param object $obj
+     * @return array
+     */
     public function select($obj) {
         $class = strtolower(get_class($obj));
 
         $sql = "SELECT * FROM $class ";
 
         return $this->openDatabaseSelect($sql);
+    }
+
+    /**
+     * MÉTODO MONTADOR DE TABELAS DO OBJETO
+     *
+     * Monta uma tabela html com os atributos do objeto buscados no banco.
+     * 
+     * @param object $obj
+     * @return HTMLTable
+     */
+    public function list($obj) {
+        $class = strtolower(get_class($obj));
+
+        $list = $this->select($obj);
+
+        // PEGA A ESTRUTURA DA TABELA 
+        $sql = "SELECT * FROM $class LIMIT 1 ";
+
+        // RETORNA AS COLUNAS COM OS VALORES DO PRIMEIRO ELEMENTO DA TABELA REFERENCIADA
+        $columns = $this->openDatabaseSelect($sql);
+
+        $table = '<table border="1">';
+        $table .= '<thead>';
+        $table .= '<tr>';
+        $table .= '<td>';
+        $table .= '<td>';
+
+        // AS COLUNAS DA TABELA SEM OS VALORES ATRIBUTOS
+        $keys = [];
+
+        foreach($columns as $column) {
+            foreach($column as $key=>$value) {
+                $table .= '<td>'. $key .'</td>';
+                array_push($keys, $key);
+            }
+        }
+
+        $table .= '</tr>';
+        $table .= '</thead>';
+        $table .= '<tbody>';
+
+        foreach($list as $lst) {
+            $table .= '<tr>';
+
+            $table .= '<th><a href=?e=D&cd=' . $lst[$keys[0]] . '>Delete</a></th>'; 
+            $table .= '<th><a href=?e=U&cd=' . $lst[$keys[0]] . '>Update</a></th>'; 
+
+            // ITERA SOBRE AS KEYS E RETORNA OS VALORES ASSOCIADOS AS COLUNAS EM QUESTAO
+            foreach($keys as $key) {
+                $table .= '<th>' . $lst[$key] . '</th>';
+            }
+            $table .= '<tr>';
+        }
+
+
+        $table .= '</table>';
+
+        echo $table;
     }
 }

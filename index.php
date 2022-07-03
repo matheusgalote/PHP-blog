@@ -23,6 +23,8 @@ switch ($_REQUEST['e']) {
 
 $list = $usuariodao->select($usuario);
 
+$usuariodao->list($usuario);
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
