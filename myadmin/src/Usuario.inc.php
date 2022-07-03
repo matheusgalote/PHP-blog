@@ -32,5 +32,4 @@ class Usuario {
 }
 
 class UsuarioDAO extends Aedra {
-
 }

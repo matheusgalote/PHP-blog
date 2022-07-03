@@ -185,4 +185,26 @@ class Aedra extends Azura {
             return false;
         }
     }
+
+    public function delete($obj) {
+        $class = strtolower(get_class($obj));
+
+        // A PRIMARY KEY DA TABELA
+        $cd = 'cd_'.$class;
+
+        // O GET DA PRIMARY KEY DA TABELA
+        $get = 'get'.ucwords($cd);
+
+        $sql = "DELETE FROM $class WHERE $cd = {$obj->$get()} ";
+
+        return $this->openDatabase($sql);
+    }
+
+    public function select($obj) {
+        $class = strtolower(get_class($obj));
+
+        $sql = "SELECT * FROM $class ";
+
+        return $this->openDatabaseSelect($sql);
+    }
 }
