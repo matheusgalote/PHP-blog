@@ -30,18 +30,10 @@ switch ($evento) {
 }
 
 ?>
-<!DOCTYPE html>
-<html lang="pt-br">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog</title>
-</head>
-
-<body>
-    <h1>The Blog</h1>
+<?php include('./includes/head.php'); ?>
+<body class="container">
+    <h1 class="title">The Blog</h1>
     <form action="">
         <input type="hidden" name="e" value="<?= $evento ? $evento : 'I' ?>">
         <input type="hidden" name="cd_usuario" value="<?= $usuario->getCd_usuario() ?>">

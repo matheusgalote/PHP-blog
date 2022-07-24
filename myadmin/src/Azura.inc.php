@@ -268,18 +268,18 @@ class Aedra extends Azura {
         // RETORNA AS COLUNAS COM OS VALORES DO PRIMEIRO ELEMENTO DA TABELA REFERENCIADA
         $columns = $this->openDatabaseSelect($sql);
 
-        $table = '<table border="1">';
+        $table = '<table class="tabela">';
         $table .= '<thead>';
         $table .= '<tr>';
-        $table .= '<td>';
-        $table .= '<td>';
+        $table .= '<td class="cel"></td>';
+        $table .= '<td class="cel"></td>';
 
         // AS COLUNAS DA TABELA SEM OS VALORES ATRIBUTOS
         $keys = [];
 
         foreach($columns as $column) {
             foreach($column as $key=>$value) {
-                $table .= '<td>'. $key .'</td>';
+                $table .= '<td class="cel head-table">'. $key .'</td>';
                 array_push($keys, $key);
             }
         }
@@ -289,14 +289,14 @@ class Aedra extends Azura {
         $table .= '<tbody>';
 
         foreach($list as $lst) {
-            $table .= '<tr>';
+            $table .= '<tr class="cel">';
 
-            $table .= '<th><a href=?e=D&cd=' . $lst[$keys[0]] . '>Delete</a></th>'; 
-            $table .= '<th><a href=?e=V&cd=' . $lst[$keys[0]] . '>Update</a></th>'; 
+            $table .= '<th class="cel"><a href=?e=D&cd=' . $lst[$keys[0]] . ' class=button><i class="fa-solid fa-circle-minus"></i></a></th>'; 
+            $table .= '<th class="cel"><a href=?e=V&cd=' . $lst[$keys[0]] . ' class=button><i class="fa-solid fa-square-pen"></i></a></th>'; 
 
             // ITERA SOBRE AS KEYS E RETORNA OS VALORES ASSOCIADOS AS COLUNAS EM QUESTAO
             foreach($keys as $key) {
-                $table .= '<th>' . $lst[$key] . '</th>';
+                $table .= '<th class="cel content-table">' . $lst[$key] . '</th>';
             }
             $table .= '<tr>';
         }
