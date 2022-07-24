@@ -2,7 +2,7 @@
 
 class Azura {
     const USER = 'root';
-    const PASS = 'eins';
+    const PASS = '';
     const PATH = 'http://localhost/blog';
     const DATABASE = 'blog';
     const HOST = 'localhost';
