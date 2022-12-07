@@ -7,9 +7,9 @@ class Azura {
     const DATABASE = 'blog';
     const HOST = 'localhost';
 
-    private $connect;
-    private $path;
-    private $result;
+    protected $connect;
+    protected $path;
+    protected $result;
 
     public function __construct() {
         try {
@@ -76,7 +76,7 @@ class Azura {
             foreach($result as $key=>$value) {
                 return $value[$cd] + 1;            
             }
-        else return 1;
+        return 1;
     }
 
     /**
@@ -120,6 +120,24 @@ class Azura {
 class Aedra extends Azura {
 
     /**
+     * EXECUTA QUERY
+     *
+     * @param string $query
+     * @param array $params
+     * @return PDOStatement
+     */
+    public function execute($query, $params = []) {
+        try {
+            $stmt = $this->connect->prepare($query);
+            $stmt->execute($params);
+            return $stmt;
+
+        } catch(PDOException $e) {
+            die('ERRO: '. $e->getMessage());
+        }
+    }
+
+    /**
      * INSERE NA TABELA DE ACORDO COM O OBJETO POPULADO
      *
      * Popula a tabela de acordo com os atributos da classe 
@@ -129,24 +147,21 @@ class Aedra extends Azura {
      */
     public function insert($obj) {
         $class = get_class($obj);
+
+        $insertArrayValues = (array) $obj; // Transforma o objeto em array
         
-        $keys = [];
-        $values = [];
+        $values = array_values($insertArrayValues);
+        $keys = array_keys($insertArrayValues); 
+        $binds = array_pad([], count($insertArrayValues), '?'); // Monta os binds da query
         
-        foreach($obj as $key=>$value) {
-            array_push($keys, $key);
-            array_push($values, "'" . $value . "'"); // INSERE ASPAS SIMPLES EM CADA VALOR
-        }
-        
+        // Monta a query
         $sql = " INSERT INTO " . strtolower($class) ;
         $sql .= " ( " . implode(", ", $keys) . ")";
-        $sql .= " VALUES (" .  implode(", ", $values) . ")";
+        $sql .= " VALUES (" .  implode(", ", $binds) . ")";
 
-        if ($this->openDatabase($sql)) {
-            return true;
-        } else {
-            return false;
-        }
+        $this->execute($sql, $values);
+
+        return $this->connect->lastInsertId();
     }
 
     /**

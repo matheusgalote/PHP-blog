@@ -93,9 +93,70 @@ table {
 }
 
 .login-section {
-	background-color: red;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
+	align-content: center;
 	align-items: center;
-	padding: 2rem;
+	min-height: 80vh;
+}
+
+.login-header {
+	font-family: 'Teko', sans-serif;
+	font-size: 1.4rem;
+	background: #A1C7E0;
+	display: flex;
+	width: 21.9rem;
+	padding: 1rem 0;
+	justify-content: start;
+	/* border-radius: 2px; */
+}
+
+.login-header h2 {
+	margin-left: 0.2rem;
+}
+
+#login-form  {
+	display: flex;
+	flex-direction: column;
+	justify-content: center; 
+	background: #C4EEF2;
+	padding: 2rem 5rem;
+	font-family: 'Poppins', sans-serif;
+}
+
+#login-form label {
+	padding: 0.5rem 0 0.2rem 0;
+}
+
+#login-form input {
+	padding: 0.4rem;
+	border-radius: 5px;
+	outline: none;
+	border: none;
+}
+
+#login-form button {
+	margin-top: 2rem;
+	padding: 0.6rem 0.8rem;
+	margin: 1.2rem auto 0 auto;
+	cursor: pointer;
+	background: #387373;
+	border: none;
+	color: #fff;
+	border-radius: 2px;
+	font-weight: bold;
+}
+
+.login-footer {
+	position: relative;
+	background: #231955;
+	width: 100vw;
+	font-size: 2rem;
+	top: 10rem;
+}
+
+.login-footer p {
+	margin: 0;
+	padding: 0;
 }
