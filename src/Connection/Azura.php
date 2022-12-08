@@ -1,4 +1,8 @@
 <?php
+namespace Connection;
+
+use PDO;
+use PDOException;
 
 class Azura {
     const USER = 'root';
